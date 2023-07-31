@@ -1,0 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.prose-custom h1, .prose-custom h2, .prose-custom a, .prose-custom ol, .prose-custom code, .prose-custom li, .prose-custom strong, .prose-custom em, .prose-custom p {
+    color: white;
+}
