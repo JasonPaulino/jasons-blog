@@ -1,41 +1,57 @@
 import getFormattedDate from "@/lib/getFormattedDate"
-import { getPostData, getSortedPostsData } from "@/lib/posts"
-import { generateMetaData } from '../../../lib/generateMetaData'
-import { notFound } from 'next/navigation'
+import { getSortedPostsData, getPostData } from "@/lib/posts"
+import { notFound } from "next/navigation"
 import Link from "next/link"
-import { Metadata } from "next/types"
 
-export default async function Post({ params }: { params: {postId: string }}) {
-const posts = getSortedPostsData() // deduped
-const { postId } = params
+export function generateStaticParams() {
+    const posts = getSortedPostsData()
 
-if (!posts.find(post => post.id === postId)) {
-    return notFound()
+    return posts.map((post) => ({
+        postId: post.id
+    }))
 }
 
-const { title, date, contentHtml } = await getPostData(postId)
+export function generateMetadata({ params }: { params: { postId: string } }) {
 
-const pubDate = getFormattedDate(date)
+    const posts = getSortedPostsData()
+    const { postId } = params
 
-const meta: Metadata = generateMetaData({ params })
+    const post = posts.find(post => post.id === postId)
 
-return (
-    <main className='mt-10 prose prose-slate prose-xl sm:prose-base md:prose-lg lg:prose-xl mx-auto prose-custom'>
-        <h1 className='text-4xl font-bold'>{title}</h1>
-        <p className='text-slate-300 mt-0'>
-            {pubDate}
-        </p>
-        <article className='my-4'>
-            <section dangerouslySetInnerHTML={{ __html: contentHtml }} />
-            <p className='mt-4'>
-            <Link
-                href="/"
-                className=" inline-block px-5 py-3 rounded-md shadow-lg bg-blue-500 hover:bg-blue-700 text-white font-bold my-2 transition-colors duration-200 no-underline"
-            >
-                Back to Home
-            </Link>
+    if (!post) {
+        return {
+            title: 'Post Not Found'
+        }
+    }
+
+    return {
+        title: post.title,
+    }
+}
+
+export default async function Post({ params }: { params: { postId: string } }) {
+
+    const posts = getSortedPostsData()
+    const { postId } = params
+
+    if (!posts.find(post => post.id === postId)) notFound()
+
+    const { title, date, contentHtml } = await getPostData(postId)
+
+    const pubDate = getFormattedDate(date)
+
+    return (
+        <main className="px-6 prose prose-xl prose-slate dark:prose-invert mx-auto">
+            <h1 className="text-3xl mt-4 mb-0">{title}</h1>
+            <p className="mt-0">
+                {pubDate}
             </p>
-        </article>
-    </main>
-)
+            <article>
+                <section dangerouslySetInnerHTML={{ __html: contentHtml }} />
+                <p>
+                    <Link href="/">← Back to home</Link>
+                </p>
+            </article>
+        </main>
+    )
 }
