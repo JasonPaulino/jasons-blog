@@ -3,22 +3,23 @@ import { getPostData, getSortedPostsData } from "@/lib/posts"
 import { generateMetaData } from './generateMetaData'
 import { notFound } from 'next/navigation'
 import Link from "next/link"
+import { Metadata } from "next/types"
 
 export default async function Post({ params }: { params: {postId: string }}) {
-    const posts = getSortedPostsData() // deduped
-    const { postId } = params
+const posts = getSortedPostsData() // deduped
+const { postId } = params
 
-    if (!posts.find(post => post.id === postId)) {
-        return notFound()
-    }
+if (!posts.find(post => post.id === postId)) {
+    return notFound()
+}
 
-    const { title, date, contentHtml } = await getPostData(postId)
+const { title, date, contentHtml } = await getPostData(postId)
 
-    const pubDate = getFormattedDate(date)
+const pubDate = getFormattedDate(date)
 
-    const meta = generateMetaData({ params })
+const meta: Metadata = generateMetaData({ params })
 
-    return (
+return (
     <main className='mt-10 prose prose-slate prose-xl sm:prose-base md:prose-lg lg:prose-xl mx-auto prose-custom'>
         <h1 className='text-4xl font-bold'>{title}</h1>
         <p className='text-slate-300 mt-0'>
@@ -36,5 +37,5 @@ export default async function Post({ params }: { params: {postId: string }}) {
             </p>
         </article>
     </main>
-    )
+)
 }
