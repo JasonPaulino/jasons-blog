@@ -1,5 +1,5 @@
 import getFormattedDate from "@/lib/getFormattedDate"
-import { getPostData, getSortedPostsData } from "@/lib/posts"
+import { getPostData, getSortedPostsData, generateMetaData } from "@/lib/posts"
 import { notFound } from 'next/navigation'
 import Link from "next/link"
 
@@ -15,7 +15,7 @@ export default async function Post({ params }: { params: {postId: string }}) {
 
     const pubDate = getFormattedDate(date)
 
-
+    const meta = generateMetaData({ params })
     
     return (
         <main className='mt-10 prose prose-slate prose-xl sm:prose-base md:prose-lg lg:prose-xl mx-auto prose-custom'>
