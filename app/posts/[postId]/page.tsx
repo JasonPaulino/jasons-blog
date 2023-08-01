@@ -1,6 +1,6 @@
 import getFormattedDate from "@/lib/getFormattedDate"
 import { getPostData, getSortedPostsData } from "@/lib/posts"
-import { generateMetaData } from './generateMetaData'
+import { generateMetaData } from '../../../lib/generateMetaData'
 import { notFound } from 'next/navigation'
 import Link from "next/link"
 import { Metadata } from "next/types"
